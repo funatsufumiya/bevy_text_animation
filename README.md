@@ -4,6 +4,11 @@
 [![Docs.rs](https://docs.rs/bevy_text_animation/badge.svg)](https://docs.rs/bevy_text_animation)
 [![License](https://img.shields.io/crates/l/bevy_text_animation)](LICENSE)
 
-text animation library for Bevy.
+text animation library for Bevy, just like typewriter effect.
 
 see [examples](examples) for usage.
+
+## TODOs
+
+- multiple sections
+- alpha color animation
