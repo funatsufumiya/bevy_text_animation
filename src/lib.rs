@@ -1,26 +1,30 @@
-use std::time::Duration;
+use std::{any::Any, time::Duration};
 
-use bevy::prelude::*;
+use bevy::{prelude::*, utils::tracing::event};
 
 pub struct TextAnimatorPlugin;
 
 impl Plugin for TextAnimatorPlugin {
     fn build(&self, app: &mut App) {
+        app.add_event::<TextAnimationFinished>();
         app.add_systems(Update, text_simple_animator_system);
     }
 }
 
 fn text_simple_animator_system(
     time: Res<Time>,
-    mut query: Query<(&mut TextSimpleAnimator, &mut Text)>,
+    mut query: Query<(&mut TextSimpleAnimator, &mut Text, Entity)>,
+    mut events: EventWriter<TextAnimationFinished>,
 ) {
-    for (mut animator, mut text) in query.iter_mut() {
+    for (mut animator, mut text, entity) in query.iter_mut() {
         match animator.state {
             TextAnimationState::Playing => {
                 if animator.timer.tick(time.delta()).just_finished() {
                     text.sections[0].value = animator.text.clone();
                     animator.timer.reset();
                     animator.state = TextAnimationState::Stopped;
+
+                    events.send(TextAnimationFinished { entity });
                 }else{
                     let val = utf8_slice::slice(&animator.text, 0, (animator.timer.elapsed().as_secs_f64() * animator.speed as f64) as usize);
                     text.sections[0].value = val.to_string();
@@ -34,6 +38,11 @@ fn text_simple_animator_system(
             }
         }
     }
+}
+
+#[derive(Event)]
+pub struct TextAnimationFinished {
+    pub entity: Entity,
 }
 
 #[derive(Debug, Default, Hash, PartialEq, Eq, Clone, Copy)]

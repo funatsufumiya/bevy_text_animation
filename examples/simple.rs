@@ -1,5 +1,5 @@
 use bevy::prelude::*;
-use bevy_text_animation::{TextAnimatorPlugin, TextSimpleAnimator};
+use bevy_text_animation::{TextAnimationFinished, TextAnimatorPlugin, TextSimpleAnimator};
 
 fn main() {
     App::new()
@@ -7,6 +7,7 @@ fn main() {
         .add_plugins(TextAnimatorPlugin)
         .add_systems(Startup, setup)
         .add_systems(Update, key_handler)
+        .add_systems(Update, event_handler)
         .run();
 }
 
@@ -41,5 +42,13 @@ fn key_handler(
         if keyboard_input.just_pressed(KeyCode::Space) {
             animator.play();
         }
+    }
+}
+
+fn event_handler(
+    mut events: EventReader<TextAnimationFinished>,
+) {
+    for event in events.read() {
+        println!("Text Animation finished for entity (id: {:?})", event.entity);
     }
 }
