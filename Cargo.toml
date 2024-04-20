@@ -1,0 +1,31 @@
+[package]
+name = "bevy_text_animation"
+version = "0.1.0"
+edition = "2021"
+repository = "https://github.com/funatsufumiya/bevy_text_animation"
+description = "text animation library for Bevy"
+license = "WTFPL"
+
+[features]
+default = []
+
+[dev-dependencies]
+bevy = { version = "0.13", default-features = false, features = [
+    "bevy_asset",
+    "bevy_winit",
+    "bevy_render",
+    "bevy_text",
+    "bevy_ui",
+    "default_font"
+] }
+
+
+[dependencies]
+bevy = { version = "0.13", default-features = false, features = [
+    "bevy_asset",
+    "bevy_winit",
+    "bevy_render",
+    "bevy_text",
+    "bevy_ui",
+] }
+utf8_slice = "1.0.0"
