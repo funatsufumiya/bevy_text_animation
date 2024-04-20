@@ -8,6 +8,12 @@ text animation library for Bevy, just like typewriter effect.
 
 see [examples](examples) for usage.
 
+## Versions
+
+| bevy | bevy_text_animation |
+|------|---------------------|
+| 0.13 | 0.1                 |
+
 ## TODOs
 
 - multiple sections
