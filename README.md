@@ -18,3 +18,4 @@ see [examples](examples) for usage.
 
 - multiple sections
 - alpha color animation
+- finish event sending
