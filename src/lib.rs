@@ -106,6 +106,15 @@ impl TextSimpleAnimator {
         self.timer.pause();
     }
 
+    pub fn resume(&mut self) {
+        self.state = TextAnimationState::Playing;
+        self.timer.unpause();
+    }
+
+    pub fn unpause(&mut self) {
+        self.resume();
+    }
+
     pub fn stop(&mut self) {
         self.state = TextAnimationState::Stopped;
         self.timer.reset();
