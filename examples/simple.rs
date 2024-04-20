@@ -31,7 +31,7 @@ fn setup(
             ..default()
         },
         ..default()
-    }).insert(TextSimpleAnimator::new("Hello, World!", 5.0));
+    }).insert(TextSimpleAnimator::new("Hello, World!", 8.0));
 }
 
 fn key_handler(
