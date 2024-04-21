@@ -85,12 +85,12 @@ impl TextSimpleAnimator {
     }
 
     pub fn duration(&self) -> Duration {
-        Self::_calc_duration(self.text.len(), self.speed)
+        Self::_calc_duration(utf8_slice::len(&self.text), self.speed)
     }
 
     /// text, speed (letter per second)
     pub fn new(text: &str, speed: f32) -> Self {
-        let duration = Self::_calc_duration(text.len(), speed);
+        let duration = Self::_calc_duration(utf8_slice::len(text), speed);
         Self {
             text: text.to_string(),
             speed,
