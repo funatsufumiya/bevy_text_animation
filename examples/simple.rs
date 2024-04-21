@@ -31,6 +31,7 @@ fn setup(
             ..default()
         },
         ..default()
+    // }).insert(TextSimpleAnimator::new("Hello, World!", 8.0));
     }).insert(TextSimpleAnimator::new("Hello, World!", 8.0));
 }
 

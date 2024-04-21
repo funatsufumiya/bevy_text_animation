@@ -24,7 +24,12 @@ fn text_simple_animator_system(
                     animator.timer.reset();
                     animator.state = TextAnimationState::Stopped;
 
-                    events.send(TextAnimationFinished { entity });
+                    if animator.secs_wait_until_finish > 0.0 {
+                        animator.end_timer = Some(Timer::from_seconds(animator.secs_wait_until_finish, TimerMode::Once));
+                        animator.state = TextAnimationState::Stopped;
+                    }else{
+                        events.send(TextAnimationFinished { entity });
+                    }
                 }else{
                     let val = utf8_slice::slice(&animator.text, 0, (animator.timer.elapsed().as_secs_f64() * animator.speed as f64) as usize);
                     text.sections[0].value = val.to_string();
@@ -46,7 +51,12 @@ fn text_simple_animator_system(
                 // animator.timer.tick(time.delta());
             }
             TextAnimationState::Stopped => {
-                animator.timer.reset();
+                if let Some(ref mut timer) = animator.end_timer {
+                    if timer.tick(time.delta()).just_finished() {
+                        events.send(TextAnimationFinished { entity });
+                        animator.end_timer = None;
+                    }
+                }
             }
         }
     }
@@ -75,7 +85,10 @@ pub struct TextSimpleAnimator {
     /// letter per second
     pub speed: f32,
     pub state: TextAnimationState,
+    /// wait time until finish event, from text ended
+    pub secs_wait_until_finish: f32,
     timer: Timer,
+    end_timer: Option<Timer>,
 }
 
 impl TextSimpleAnimator {
@@ -95,7 +108,9 @@ impl TextSimpleAnimator {
             text: text.to_string(),
             speed,
             state: TextAnimationState::Playing,
+            secs_wait_until_finish: 0.0,
             timer: Timer::new(duration, TimerMode::Once),
+            end_timer: None,
         }
     }
 
@@ -110,19 +125,27 @@ impl TextSimpleAnimator {
         self
     }
 
+    pub fn with_wait(mut self, secs: f32) -> Self {
+        self.secs_wait_until_finish = secs;
+        self
+    }
+
     pub fn play(&mut self) {
         self.state = TextAnimationState::Playing;
         self.timer.reset();
+        self.end_timer = None;
     }
 
     pub fn pause(&mut self) {
         self.state = TextAnimationState::Paused;
         self.timer.pause();
+        self.end_timer = None;
     }
 
     pub fn resume(&mut self) {
         self.state = TextAnimationState::Playing;
         self.timer.unpause();
+        self.end_timer = None;
     }
 
     pub fn unpause(&mut self) {
@@ -131,6 +154,7 @@ impl TextSimpleAnimator {
 
     pub fn stop(&mut self) {
         self.state = TextAnimationState::Stopped;
+        self.end_timer = None;
         self.timer.reset();
         self.timer.pause();
     }
