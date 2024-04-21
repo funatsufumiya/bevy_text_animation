@@ -125,27 +125,26 @@ impl TextSimpleAnimator {
         self
     }
 
-    fn reset_timer(&mut self) {
-        self.timer = Timer::new(Self::_calc_duration(utf8_slice::len(&self.text), self.speed), TimerMode::Once);
-    }
-
     /// set wait time until finish event, from text ended
     pub fn with_wait_until_finish(mut self, secs: f32) -> Self {
         self.secs_wait_until_finish = secs;
         self
     }
+    
+    fn reset_timer(&mut self) {
+        self.timer = Timer::new(Self::_calc_duration(utf8_slice::len(&self.text), self.speed), TimerMode::Once);
+    }
 
     /// play with waiting for x seconds before playing
-    pub fn play_with_wait_before(mut self, secs: f32) -> Self {
+    pub fn play_with_wait_before(mut self, secs: f32) {
         self.state = TextAnimationState::Waiting(secs);
-        self.play();
-        self
+        self.reset_timer();
+        self.end_timer = None;
     }
 
     pub fn play(&mut self) {
         self.state = TextAnimationState::Playing;
         self.reset_timer();
-
         self.end_timer = None;
     }
 
