@@ -125,8 +125,13 @@ impl TextSimpleAnimator {
         self
     }
 
-    pub fn with_wait(mut self, secs: f32) -> Self {
+    pub fn with_wait_until_finish(mut self, secs: f32) -> Self {
         self.secs_wait_until_finish = secs;
+        self
+    }
+
+    pub fn with_wait_before_play(mut self, secs: f32) -> Self {
+        self.state = TextAnimationState::Waiting(secs);
         self
     }
 
