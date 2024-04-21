@@ -29,9 +29,21 @@ fn text_simple_animator_system(
                     let val = utf8_slice::slice(&animator.text, 0, (animator.timer.elapsed().as_secs_f64() * animator.speed as f64) as usize);
                     text.sections[0].value = val.to_string();
                 }
+            },
+            TextAnimationState::Waiting(wait) => {
+                if wait <= 0.0 {
+                    animator.state = TextAnimationState::Playing;
+                }else{
+                    let t = wait - time.delta_seconds();
+                    if t <= 0.0 {
+                        animator.state = TextAnimationState::Playing;
+                    }else{
+                        animator.state = TextAnimationState::Waiting(t);
+                    }
+                }
             }
             TextAnimationState::Paused => {
-                animator.timer.tick(time.delta());
+                // animator.timer.tick(time.delta());
             }
             TextAnimationState::Stopped => {
                 animator.timer.reset();
@@ -45,8 +57,10 @@ pub struct TextAnimationFinished {
     pub entity: Entity,
 }
 
-#[derive(Debug, Default, Hash, PartialEq, Eq, Clone, Copy)]
+#[derive(Debug, Default, Clone, Copy)]
 pub enum TextAnimationState {
+    /// waiting for x seconds before playing
+    Waiting(f32),
     Stopped,
     Paused,
     #[default]
@@ -120,7 +134,22 @@ impl TextSimpleAnimator {
         self.timer.reset();
         self.timer.pause();
     }
-    
+
+    pub fn is_playing(&self) -> bool {
+        matches!(self.state, TextAnimationState::Playing)
+    }
+
+    pub fn is_paused(&self) -> bool {
+        matches!(self.state, TextAnimationState::Paused)
+    }
+
+    pub fn is_stopped(&self) -> bool {
+        matches!(self.state, TextAnimationState::Stopped)
+    }
+
+    pub fn is_waiting(&self) -> bool {
+        matches!(self.state, TextAnimationState::Waiting(_))
+    }
 } 
 
 impl Default for TextSimpleAnimator {
