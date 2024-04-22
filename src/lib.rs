@@ -32,11 +32,22 @@ fn text_simple_animator_system(
                     }
                 }else{
                     let val = utf8_slice::slice(&animator.text, 0, (animator.timer.elapsed().as_secs_f64() * animator.speed as f64) as usize);
-                    text.sections[0].value = val.to_string();
+                    if animator.fill_spaces {
+                        let len = animator.max_text_length();
+                        let v  = format!("{}{}", val, animator.fill_spaces_char.repeat(len - utf8_slice::len(&val)));
+                        text.sections[0].value = v;
+                    }else{
+                        text.sections[0].value = val.to_string();
+                    }
                 }
             },
             TextAnimationState::Waiting(wait) => {
                 if !text.sections[0].value.is_empty() {
+                    if animator.fill_spaces {
+                        let len = animator.max_text_length();
+                        let val  = animator.fill_spaces_char.repeat(len);
+                        text.sections[0].value = val;
+                    }
                     text.sections[0].value = "".to_string();
                 }
                 if wait <= 0.0 {
@@ -90,6 +101,9 @@ pub struct TextSimpleAnimator {
     pub state: TextAnimationState,
     /// wait time until finish event, from text ended
     pub secs_wait_until_finish: f32,
+    /// fill spaces with empty string, to fill text length
+    pub fill_spaces: bool,
+    pub fill_spaces_char: String,
     timer: Timer,
     end_timer: Option<Timer>,
 }
@@ -100,8 +114,12 @@ impl TextSimpleAnimator {
         Duration::from_secs_f64(duration)
     }
 
+    pub fn max_text_length(&self) -> usize {
+        utf8_slice::len(&self.text)
+    }
+
     pub fn duration(&self) -> Duration {
-        Self::_calc_duration(utf8_slice::len(&self.text), self.speed)
+        Self::_calc_duration(self.max_text_length(), self.speed)
     }
 
     /// text, speed (letter per second)
@@ -112,6 +130,8 @@ impl TextSimpleAnimator {
             speed,
             state: TextAnimationState::Playing,
             secs_wait_until_finish: 0.0,
+            fill_spaces: false,
+            fill_spaces_char: " ".to_string(),
             timer: Timer::new(duration, TimerMode::Once),
             end_timer: None,
         }
@@ -128,6 +148,16 @@ impl TextSimpleAnimator {
         self
     }
 
+    pub fn with_fill_spaces(mut self, fill: bool) -> Self {
+        self.fill_spaces = fill;
+        self
+    }
+
+    pub fn with_fill_spaces_char(mut self, fill_char: &str) -> Self {
+        self.fill_spaces_char = fill_char.to_string();
+        self
+    }
+
     /// set wait time until finish event, from text ended
     pub fn with_wait_until_finish(mut self, secs: f32) -> Self {
         self.secs_wait_until_finish = secs;
@@ -140,7 +170,7 @@ impl TextSimpleAnimator {
     }
     
     fn reset_timer(&mut self) {
-        self.timer = Timer::new(Self::_calc_duration(utf8_slice::len(&self.text), self.speed), TimerMode::Once);
+        self.timer = Timer::new(Self::_calc_duration(self.max_text_length(), self.speed), TimerMode::Once);
     }
 
     /// play with waiting for x seconds before playing
