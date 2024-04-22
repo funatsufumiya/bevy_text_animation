@@ -36,6 +36,9 @@ fn text_simple_animator_system(
                 }
             },
             TextAnimationState::Waiting(wait) => {
+                if !text.sections[0].value.is_empty() {
+                    text.sections[0].value = "".to_string();
+                }
                 if wait <= 0.0 {
                     animator.state = TextAnimationState::Playing;
                 }else{
@@ -130,13 +133,18 @@ impl TextSimpleAnimator {
         self.secs_wait_until_finish = secs;
         self
     }
+
+    pub fn with_wait_before(mut self, secs: f32) -> Self {
+        self.state = TextAnimationState::Waiting(secs);
+        self
+    }
     
     fn reset_timer(&mut self) {
         self.timer = Timer::new(Self::_calc_duration(utf8_slice::len(&self.text), self.speed), TimerMode::Once);
     }
 
     /// play with waiting for x seconds before playing
-    pub fn play_with_wait_before(mut self, secs: f32) {
+    pub fn play_with_wait_before(&mut self, secs: f32) {
         self.state = TextAnimationState::Waiting(secs);
         self.reset_timer();
         self.end_timer = None;

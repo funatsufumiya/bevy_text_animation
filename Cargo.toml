@@ -1,6 +1,6 @@
 [package]
 name = "bevy_text_animation"
-version = "0.1.10"
+version = "0.1.11"
 edition = "2021"
 repository = "https://github.com/funatsufumiya/bevy_text_animation"
 description = "text animation library for Bevy"
