@@ -118,11 +118,11 @@ impl TextSimpleAnimator {
         utf8_slice::len(&self.text)
     }
 
-    /// to suppress TextAnimationFinished event, after text ended.
-    /// for example, when skipping message.
-    pub fn clear_end_timer(&mut self) {
-        self.end_timer = None;
-    }
+    // /// to suppress TextAnimationFinished event, after text ended.
+    // /// for example, when skipping message.
+    // pub fn clear_end_timer(&mut self) {
+    //     self.end_timer = None;
+    // }
 
     pub fn duration(&self) -> Duration {
         Self::_calc_duration(self.max_text_length(), self.speed)

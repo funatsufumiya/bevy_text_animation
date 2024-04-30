@@ -761,7 +761,7 @@ dependencies = [
 
 [[package]]
 name = "bevy_text_animation"
-version = "0.1.13"
+version = "0.1.14"
 dependencies = [
  "bevy",
  "utf8_slice",
