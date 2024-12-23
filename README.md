@@ -14,6 +14,7 @@ see [examples](examples) for usage.
 
 | bevy | bevy_text_animation |
 |------|---------------------|
+| 0.15 | 0.3                 |
 | 0.14 | 0.2                 |
 | 0.13 | 0.1                 |
 
@@ -38,24 +39,16 @@ fn main() {
 fn setup(
     mut commands: Commands,
 ) {
-    commands.spawn(Camera2dBundle::default());
+    commands.spawn(Camera2d::default());
 
-    commands.spawn(Text2dBundle {
-        text: Text {
-            sections: vec![
-                TextSection {
-                    value: "".to_string(),
-                    style: TextStyle {
-                        font_size: 60.0,
-                        color: Color::WHITE,
-                        ..default()
-                    },
-                },
-            ],
+    commands.spawn((
+        Text2d::new(""),
+        TextFont {
+            font_size: 60.0,
             ..default()
         },
-        ..default()
-    }).insert(TextSimpleAnimator::new("Hello, World!", 8.0));
+        TextColor(Color::WHITE),
+    )).insert(TextSimpleAnimator::new("Hello, World!", 8.0));
 }
 
 fn key_handler(

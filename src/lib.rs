@@ -13,14 +13,14 @@ impl Plugin for TextAnimatorPlugin {
 
 fn text_simple_animator_system(
     time: Res<Time>,
-    mut query: Query<(&mut TextSimpleAnimator, &mut Text, Entity)>,
+    mut query: Query<(&mut TextSimpleAnimator, &mut Text2d, Entity)>,
     mut events: EventWriter<TextAnimationFinished>,
 ) {
     for (mut animator, mut text, entity) in query.iter_mut() {
         match animator.state {
             TextAnimationState::Playing => {
                 if animator.timer.tick(time.delta()).just_finished() {
-                    text.sections[0].value = animator.text.clone();
+                    text.0 = animator.text.clone();
                     animator.timer.reset();
                     animator.state = TextAnimationState::Stopped;
 
@@ -35,25 +35,25 @@ fn text_simple_animator_system(
                     if animator.fill_spaces {
                         let len = animator.max_text_length();
                         let v  = format!("{}{}", val, animator.fill_spaces_char.repeat(len - utf8_slice::len(&val)));
-                        text.sections[0].value = v;
+                        text.0 = v;
                     }else{
-                        text.sections[0].value = val.to_string();
+                        text.0 = val.to_string();
                     }
                 }
             },
             TextAnimationState::Waiting(wait) => {
-                if !text.sections[0].value.is_empty() {
+                if !text.0.is_empty() {
                     if animator.fill_spaces {
                         let len = animator.max_text_length();
                         let val  = animator.fill_spaces_char.repeat(len);
-                        text.sections[0].value = val;
+                        text.0 = val;
                     }
-                    text.sections[0].value = "".to_string();
+                    text.0 = "".to_string();
                 }
                 if wait <= 0.0 {
                     animator.state = TextAnimationState::Playing;
                 }else{
-                    let t = wait - time.delta_seconds();
+                    let t = wait - time.delta_secs();
                     if t <= 0.0 {
                         animator.state = TextAnimationState::Playing;
                     }else{
