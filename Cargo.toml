@@ -24,5 +24,6 @@ bevy = { version = "^0.15.1", default-features = false, features = [
 [dependencies]
 bevy = { version = "^0.15.1", default-features = false, features = [
     "bevy_text",
+    "bevy_ui",
 ] }
 utf8_slice = "1.0.0"
