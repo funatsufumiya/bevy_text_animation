@@ -75,4 +75,5 @@ fn event_handler(
 ## TODOs
 
 - multiple sections
-- alpha color animation
+- alpha color animation (custom animation)
+- punctuation
