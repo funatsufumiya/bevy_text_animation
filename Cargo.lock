@@ -888,7 +888,7 @@ dependencies = [
 
 [[package]]
 name = "bevy_text_animation"
-version = "0.3.3"
+version = "0.3.4"
 dependencies = [
  "bevy",
  "utf8_slice",
