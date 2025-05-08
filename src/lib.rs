@@ -1,6 +1,6 @@
 use std::{any::Any, time::Duration};
 
-use bevy::{prelude::*, utils::tracing::event};
+use bevy::{ecs::component::Mutable, prelude::*};
 
 pub struct TextAnimatorPlugin;
 
@@ -46,7 +46,7 @@ impl Plugin for TextAnimatorPlugin {
     }
 }
 
-fn text_animator_system<T: Component + TextComponent>(
+fn text_animator_system<T: Component<Mutability = Mutable> + TextComponent>(
     time: Res<Time>,
     mut query: Query<(&mut TextSimpleAnimator, &mut T, Entity)>,
     mut events: EventWriter<TextAnimationFinished>,
@@ -63,7 +63,7 @@ fn text_animator_system<T: Component + TextComponent>(
                         animator.end_timer = Some(Timer::from_seconds(animator.secs_wait_until_finish, TimerMode::Once));
                         animator.state = TextAnimationState::Stopped;
                     } else {
-                        events.send(TextAnimationFinished { entity });
+                        events.write(TextAnimationFinished { entity });
                     }
                 } else {
                     let val = utf8_slice::slice(&animator.text, 0, (animator.timer.elapsed().as_secs_f64() * animator.speed as f64) as usize);
@@ -103,7 +103,7 @@ fn text_animator_system<T: Component + TextComponent>(
             TextAnimationState::Stopped => {
                 if let Some(ref mut timer) = animator.end_timer {
                     if timer.tick(time.delta()).just_finished() {
-                        events.send(TextAnimationFinished { entity });
+                        events.write(TextAnimationFinished { entity });
                         animator.end_timer = None;
                     }
                 }
