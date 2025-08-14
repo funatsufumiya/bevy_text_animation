@@ -1,10 +1,10 @@
 [package]
 name = "bevy_text_animation"
-version = "0.4.1"
+version = "0.4.2"
 edition = "2021"
 repository = "https://github.com/funatsufumiya/bevy_text_animation"
 description = "text animation library for Bevy"
-license = "WTFPL"
+license = "WTFPL, 0BSD"
 # autoexamples = false
 
 [features]

@@ -78,3 +78,7 @@ fn event_handler(
 - multiple sections
 - alpha color animation (custom animation)
 - punctuation
+
+## License
+
+Dual licensed under WTFPL and/or 0BSD.
