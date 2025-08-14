@@ -4,7 +4,7 @@ version = "0.4.2"
 edition = "2021"
 repository = "https://github.com/funatsufumiya/bevy_text_animation"
 description = "text animation library for Bevy"
-license = "WTFPL, 0BSD"
+license = "WTFPL OR 0BSD"
 # autoexamples = false
 
 [features]
