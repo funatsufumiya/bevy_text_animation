@@ -38,7 +38,7 @@ fn key_handler(
 }
 
 fn event_handler(
-    mut events: EventReader<TextAnimationFinished>,
+    mut events: MessageReader<TextAnimationFinished>,
 ) {
     for event in events.read() {
         println!("Text Animation finished for entity (id: {:?})", event.entity);
