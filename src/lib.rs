@@ -40,7 +40,7 @@ impl TextComponent for Text {
 
 impl Plugin for TextAnimatorPlugin {
     fn build(&self, app: &mut App) {
-        app.add_event::<TextAnimationFinished>();
+        app.add_message::<TextAnimationFinished>();
         app.add_systems(Update, text_animator_system::<Text2d>);
         app.add_systems(Update, text_animator_system::<Text>);
     }
@@ -49,7 +49,7 @@ impl Plugin for TextAnimatorPlugin {
 fn text_animator_system<T: Component<Mutability = Mutable> + TextComponent>(
     time: Res<Time>,
     mut query: Query<(&mut TextSimpleAnimator, &mut T, Entity)>,
-    mut events: EventWriter<TextAnimationFinished>,
+    mut events: MessageWriter<TextAnimationFinished>,
 ) {
     for (mut animator, mut text, entity) in query.iter_mut() {
         match animator.state {
@@ -112,7 +112,7 @@ fn text_animator_system<T: Component<Mutability = Mutable> + TextComponent>(
     }
 }
 
-#[derive(Event)]
+#[derive(Message)]
 pub struct TextAnimationFinished {
     pub entity: Entity,
 }

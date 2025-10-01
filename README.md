@@ -15,6 +15,7 @@ see [examples](examples) for usage.
 
 | bevy | bevy_text_animation |
 |------|---------------------|
+| 0.17 | 0.5                 |
 | 0.16 | 0.4                 |
 | 0.15 | 0.3                 |
 | 0.14 | 0.2                 |
