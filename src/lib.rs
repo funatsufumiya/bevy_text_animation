@@ -13,6 +13,7 @@ trait TextComponent {
 impl TextComponent for Text2d {
     fn set_content(&mut self, content: String) {
         self.0 = content;
+        // self.u
     }
     
     fn get_content(&self) -> &str {
@@ -56,6 +57,8 @@ fn text_animator_system<T: Component<Mutability = Mutable> + TextComponent>(
             TextAnimationState::Playing => {
                 if animator.timer.tick(time.delta()).just_finished() {
                     text.set_content(animator.text.clone());
+                    text.set_changed();
+                    
                     animator.timer.reset();
                     animator.state = TextAnimationState::Stopped;
 
