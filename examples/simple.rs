@@ -19,7 +19,7 @@ fn setup(
     commands.spawn((
         Text2d::new(""),
         TextFont {
-            font_size: 60.0,
+            font_size: FontSize::Px(60.0),
             ..default()
         },
         TextColor(Color::WHITE),
